@@ -1,25 +1,11 @@
 <script setup lang="ts">
-import * as tmImage from "@teachablemachine/image";
-import { computed } from "@vue/reactivity";
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
-import osako from "./components/osako.vue";
+// import * as tmImage from "@teachablemachine/image";
+import { computed } from "vue";
+import ThePlayerHandCard from "./components/ThePlayerHandCard.vue";
+import VCard from "./components/VCard.vue";
 import { useHandClassification } from "./useHandClassification";
 import { useRandomHand } from "./useRandomHand";
 
-// const contents = [
-//   { title: "生活", price: "20000" },
-//   { title: "食費", price: "30000" },
-//   { title: "勉強", price: "15000" },
-//   { title: "娯楽", price: "45000" },
-//   { title: "総額", price: "480000" },
-//   { title: "趣味", price: "38000" },
-//   { title: "美容", price: "22000" },
-//   { title: "旅行", price: "10000" },
-//   { title: "将来", price: "300000" },
-// ];
-
-// const log = console.log;
 const {
   canvas,
   hands,
@@ -35,7 +21,40 @@ const youWin = computed(
 </script>
 
 <template>
-  <!-- <osako @click="init()">Start</osako> -->
+  <div class="container mx-auto">
+    <div class="lg:grid grid-cols-4 hidden">
+      <v-card v-for="hand in hands" :key="hand.name" class="flex-1 m-4">
+        <div class="font-bold">{{ hand.name }}</div>
+        <div>{{ (hand.score * 100).toFixed(0) }}%</div>
+      </v-card>
+    </div>
+    <canvas ref="canvas" class="m-4 rounded-md flex-1"></canvas>
+    <div class="flex">
+      <the-player-hand-card
+        :class="{
+          'bg-blue-200': !youWin,
+          'bg-red-300': youWin,
+        }"
+      >
+        <template #player>あなた</template>
+        {{ myHand.name }}
+      </the-player-hand-card>
+      <div class="font-bold flex flex-col justify-center">VS</div>
+      <the-player-hand-card
+        :class="{
+          'bg-blue-200': youWin,
+          'bg-red-300': !youWin,
+        }"
+      >
+        <template #player>エネミー</template>
+        {{ enemyHand }}
+      </the-player-hand-card>
+    </div>
+  </div>
+</template>
+
+<!--<template>
+   <osako @click="init()">Start</osako> 
   <canvas ref="canvas" class="rounded-md"></canvas>
   <div>{{ hands }}</div>
   <div>今表示されているのは、{{ myHand.name }}です。</div>
@@ -43,7 +62,7 @@ const youWin = computed(
   {{ enemyHand }}
   <div v-if="youWin">勝ち</div>
   <div v-else>負け</div>
-  <!-- <div class="container bg-gray-900">
+  <div class="container bg-gray-900">
     <div class="grid md:grid-cols-3 grid-cols-3 justify-items-center p-20">
       <osako
         v-for="index in contents"
@@ -64,8 +83,8 @@ const youWin = computed(
         </div>
       </osako>
     </div>
-  </div> -->
-</template>
+  </div> 
+</template> -->
 
 <style>
 #app {
